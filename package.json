@@ -1,0 +1,23 @@
+{
+  "name": "geoscanner",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "start": "vite preview --host 0.0.0.0 --port 3000"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.21",
+    "@types/proj4": "^2.5.6",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.1"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "proj4": "^2.20.9",
+    "shpjs": "^6.2.0"
+  }
+}

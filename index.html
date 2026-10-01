@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LithoVox — GeoScanner</title>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-logo" src="/logo.png" alt="LithoVox" />
+          <span class="brand-title">
+            <span class="brand-litho">Litho</span><span class="brand-vox">Vox</span>
+          </span>
+          <span class="brand-sub">GeoScanner</span>
+        </div>
+
+        <div class="toolbar-group modes" id="mode-group">
+          <button class="toolbar-btn mode-btn" data-mode="pan" title="Pan / Zoom">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 9 2 12 5 15" /><polyline points="9 5 12 2 15 5" /><polyline points="15 19 12 22 9 19" /><polyline points="19 9 22 12 19 15" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="12" y1="2" x2="12" y2="22" />
+            </svg>
+            <span>Pan / Zoom</span>
+          </button>
+          <button class="toolbar-btn mode-btn" data-mode="reference" title="Set Reference Points">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" /><line x1="22" y1="12" x2="18" y2="12" /><line x1="6" y1="12" x2="2" y2="12" /><line x1="12" y1="6" x2="12" y2="2" /><line x1="12" y1="22" x2="12" y2="18" />
+            </svg>
+            <span>Reference Points</span>
+          </button>
+          <button class="toolbar-btn mode-btn" data-mode="draw" title="Draw Soil Layer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+            <span>Draw Soil Layer</span>
+          </button>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="toolbar-btn btn-danger" id="new-project-btn" title="New Project">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+          </button>
+          <label class="toolbar-btn file-btn" title="Upload Image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" />
+            </svg>
+            <input type="file" id="image-input" accept="image/*" hidden />
+          </label>
+          <label class="toolbar-btn file-btn" title="Upload Reference Line Shapefile (.shp, .shx, .dbf, .prj)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" />
+            </svg>
+            <span>Upload Referenceline</span>
+            <input type="file" id="referenceline-input" accept=".shp,.shx,.dbf,.prj" multiple hidden />
+          </label>
+          <div class="toolbar-divider"></div>
+          <button class="toolbar-btn" id="save-project-btn" title="Save Project">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" />
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="load-project-btn" title="Load Project">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </button>
+          <input type="file" id="project-input" accept="application/json,.json" hidden />
+          <div class="toolbar-divider"></div>
+          <button class="toolbar-btn primary-btn" id="generate-btn" title="Generate">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" />
+            </svg>
+            <span>Generate</span>
+          </button>
+          <div class="toolbar-divider"></div>
+          <button type="button" id="theme-switch-btn" class="theme-switch" role="switch">
+            <span class="theme-switch-track">
+              <span class="theme-switch-thumb"></span>
+            </span>
+          </button>
+        </div>
+      </header>
+
+      <main class="split-main">
+        <div class="panel panel-canvas" id="canvas-split">
+          <div class="canvas-container" id="canvas-container">
+            <canvas id="canvas"></canvas>
+            <p class="empty-hint" id="empty-hint">Upload an image to get started</p>
+            <button id="toggle-image-btn" class="toggle-image-btn" title="Hide Image">
+              <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                <line x1="2" y1="2" x2="22" y2="22" />
+              </svg>
+            </button>
+          </div>
+          <div class="split-divider" id="split-divider">
+            <div class="split-divider-handle"></div>
+          </div>
+          <div class="profile-container" id="profile-container">
+            <canvas id="profile-canvas"></canvas>
+            <button id="download-profile-btn" class="download-profile-btn" title="Download Soil Profiles as JSON">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <aside class="panel panel-sidebar">
+          <label class="checkbox-row" id="use-referenceline-row">
+            <input type="checkbox" id="use-referenceline" disabled />
+            Use Referenceline
+          </label>
+
+          <div class="referenceline-map" id="referenceline-map"></div>
+
+          <section class="panel-section" id="reference-panel">
+            <h2>Reference Points</h2>
+            <p class="hint">
+              Switch to "Set Reference Points" mode, then click the top-left and
+              bottom-right locations on the image. Enter their real-world
+              coordinates below.
+            </p>
+
+            <div class="ref-point">
+              <h3>Top-left</h3>
+              <div class="ref-row">
+                <span class="ref-label">Pixel</span>
+                <span class="ref-pixel" id="tl-pixel">not set</span>
+              </div>
+              <div class="ref-row">
+                <label>X <input type="number" id="tl-x" step="any" /></label>
+                <label>Z <input type="number" id="tl-z" step="any" /></label>
+              </div>
+            </div>
+
+            <div class="ref-point">
+              <h3>Bottom-right</h3>
+              <div class="ref-row">
+                <span class="ref-label">Pixel</span>
+                <span class="ref-pixel" id="br-pixel">not set</span>
+              </div>
+              <div class="ref-row">
+                <label>X <input type="number" id="br-x" step="any" /></label>
+                <label>Z <input type="number" id="br-z" step="any" /></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section" id="layers-panel">
+            <h2>Soil Layers</h2>
+            <p class="hint" id="draw-hint">
+              Switch to "Draw Soil Layer" mode. Left click to add a point,
+              right click to remove the last point, double-click to finish
+              the line.
+            </p>
+            <ul id="layers-list"></ul>
+            <button class="toolbar-btn btn-danger clear-lines-btn" id="clear-lines-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              <span>Clear All Lines</span>
+            </button>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="bottombar" id="status-bar"></footer>
+    </div>
+
+    <div id="generate-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2>Generate Soil Profiles</h2>
+        <p class="hint">
+          Layers thinner than the minimum layer height are removed, and their
+          thickness is split between the layers directly above and below.
+        </p>
+        <div class="modal-field">
+          <label for="min-layer-height">Minimum layer height (m)</label>
+          <input type="number" id="min-layer-height" step="0.01" min="0" value="0.1" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="generate-modal-cancel" class="toolbar-btn">Cancel</button>
+          <button type="button" id="generate-modal-confirm" class="toolbar-btn primary-btn">Generate</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
