@@ -1,0 +1,13 @@
+# Site for geoscanner, served at https://geoscanner.lithovox.nl
+# Copy to /etc/caddy/apps/geoscanner.caddy on the server.
+
+geoscanner.lithovox.nl {
+	root * /var/www/apps/geoscanner/current
+	encode zstd gzip
+	try_files {path} /index.html
+	file_server
+
+	# Vite assets are content-hashed, so they can be cached forever
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+}
